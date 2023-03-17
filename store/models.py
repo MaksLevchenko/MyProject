@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Category(models.Model):
+    """Модель категории"""
     name = models.CharField(max_length=50, verbose_name='название')
     slug = models.SlugField(unique=True, max_length=20, verbose_name='слаг')
 
@@ -15,6 +16,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    """Модель продукта"""
     name = models.CharField(max_length=35, verbose_name='наименование')
     image = models.ImageField(verbose_name='изображение', upload_to='product/')
     description = models.TextField(max_length=200, verbose_name='описание')
@@ -31,6 +33,7 @@ class Product(models.Model):
 
 
 class UserProductFavorite(models.Model):
+    """Модель избранного"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
     like = models.BooleanField(default=False, verbose_name='Лайк')
@@ -42,5 +45,3 @@ class UserProductFavorite(models.Model):
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
-
-

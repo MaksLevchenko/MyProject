@@ -7,22 +7,26 @@ from store.serializers import CategorySerializer, ProductSerializer, UserProduct
 
 
 class CategoryListView(generics.ListAPIView):
+    """Категории"""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 class ProductListView(generics.ListAPIView):
+    """Продукты"""
     queryset = Product.objects.all().annotate(annotated_like=Count(Case(When(userproductfavorite__like=True, then=1))))
     serializer_class = ProductSerializer
 
 
 class ProductDetailView(generics.RetrieveAPIView):
+    """Продукт"""
     queryset = Product.objects.all().annotate(annotated_like=Count(Case(When(userproductfavorite__like=True, then=1))))
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
 
 class UserProductFavoriteView(generics.GenericAPIView):
+    """Избранное"""
     permission_classes = [IsAuthenticated]
     queryset = UserProductFavorite.objects.all()
     serializer_class = UserProductFavoriteSerializer
@@ -30,11 +34,10 @@ class UserProductFavoriteView(generics.GenericAPIView):
 
     def get_object(self):
         obj, created = UserProductFavorite.objects.get_or_create(user=self.request.user,
-                                                        post_id=self.kwargs['post'])
+                                                                 post_id=self.kwargs['post'])
         return obj
 
 
 class FavoriteView(generics.ListAPIView):
     queryset = UserProductFavorite.objects.filter(is_favorites=True)
     serializer_class = UserProductFavoriteSerializer
-
